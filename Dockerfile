@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Base image: ComfyUI + comfy-cli + ComfyUI-Manager
 FROM runpod/worker-comfyui:5.5.1-base
 
@@ -17,4 +16,3 @@ RUN comfy model download \
     --url https://huggingface.co/lllyasviel/misc/blob/main/clip_vision_vit_h.safetensors \
     --relative-path models/clip_vision \
     --filename clip_vision_vit_h.safetensors
-=======
