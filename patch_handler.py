@@ -28,13 +28,13 @@ print(f"Patching handler at: {handler_path}")
 with open(handler_path) as f:
     src = f.read()
 
-if '"gifs"' in src:
+if '"gifs"' in src or "'gifs'" in src:
     print("Handler already supports gifs output — nothing to do")
     sys.exit(0)
 
 patched = src
 
-# Pattern A: key == "images"  — handler iterates node output keys
+# Pattern A: key == "images"  — handler iterates node output keys (double quotes)
 if 'key == "images"' in patched:
     patched = patched.replace(
         'key == "images"',
@@ -42,7 +42,15 @@ if 'key == "images"' in patched:
     )
     print("Applied pattern A: key == images -> key in (images, gifs)")
 
-# Pattern B: if "images" in node_output:
+# Pattern A2: key == 'images'  — single quotes variant
+if "key == 'images'" in patched:
+    patched = patched.replace(
+        "key == 'images'",
+        "key in ('images', 'gifs')",
+    )
+    print("Applied pattern A2: key == 'images' -> key in ('images', 'gifs')")
+
+# Pattern B: if "images" in node_output:  — double quotes
 if '"images" in node_output' in patched:
     patched = patched.replace(
         '"images" in node_output',
@@ -50,13 +58,29 @@ if '"images" in node_output' in patched:
     )
     print('Applied pattern B: "images" in node_output -> set intersection')
 
-# Pattern C: node_output["images"]  — direct key access
+# Pattern B2: if 'images' in node_output:  — single quotes
+if "'images' in node_output" in patched:
+    patched = patched.replace(
+        "'images' in node_output",
+        "bool(set(node_output.keys()) & {'images', 'gifs'})",
+    )
+    print("Applied pattern B2: 'images' in node_output -> set intersection")
+
+# Pattern C: node_output["images"]  — direct key access (double quotes)
 if 'node_output["images"]' in patched:
     patched = patched.replace(
         'node_output["images"]',
         'node_output.get("images", node_output.get("gifs", []))',
     )
     print('Applied pattern C: node_output["images"] -> get with gifs fallback')
+
+# Pattern C2: node_output['images']  — direct key access (single quotes)
+if "node_output['images']" in patched:
+    patched = patched.replace(
+        "node_output['images']",
+        "node_output.get('images', node_output.get('gifs', []))",
+    )
+    print("Applied pattern C2: node_output['images'] -> get with gifs fallback")
 
 if patched == src:
     print("WARNING: No patch patterns matched — handler structure differs from expected")
