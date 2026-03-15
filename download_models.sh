@@ -3,7 +3,7 @@
 # Idempotent: re-running on an already-populated volume is a fast no-op.
 set -e
 
-MODELS_DIR="/runpod-volume"
+MODELS_DIR="/runpod-volume/models"
 LORA_DIR="$MODELS_DIR/loras"
 DIFF_DIR="$MODELS_DIR/diffusion_models"
 CLIP_DIR="$MODELS_DIR/clip"
