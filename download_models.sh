@@ -5,7 +5,7 @@ set -e
 
 MODELS_DIR="/runpod-volume/models"
 LORA_DIR="$MODELS_DIR/loras"
-DIFF_DIR="$MODELS_DIR/diffusion_models"
+DIFF_DIR="$MODELS_DIR/unet"
 CLIP_DIR="$MODELS_DIR/clip"
 VAE_DIR="$MODELS_DIR/vae"
 CLIP_VIS_DIR="$MODELS_DIR/clip_vision"
