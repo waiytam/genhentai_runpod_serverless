@@ -19,7 +19,13 @@ download_if_missing() {
   if [ ! -f "$dest" ]; then
     echo "Downloading $(basename "$dest")..."
     mkdir -p "$(dirname "$dest")"
-    wget -q --show-progress -O "$dest" "$url" || { echo "FAILED: $url"; rm -f "$dest"; }
+    # Pass HF token if set (required for private HuggingFace repos)
+    if [ -n "$HF_TOKEN" ]; then
+      wget -q --show-progress --header="Authorization: Bearer $HF_TOKEN" -O "$dest" "$url" \
+        || { echo "FAILED: $url"; rm -f "$dest"; }
+    else
+      wget -q --show-progress -O "$dest" "$url" || { echo "FAILED: $url"; rm -f "$dest"; }
+    fi
   else
     echo "Already present: $(basename "$dest")"
   fi
